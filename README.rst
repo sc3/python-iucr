@@ -2,7 +2,29 @@
 python-iucr
 ===========
 
-Python package for working with Illinois Uniform Crime Reporting (IUCR) data. 
+Python package for working with Illinois Uniform Crime Reporting (IUCR) data.
+
+It's primary use case is as a crosswalk between Illinois Compiled Statutes (ILCS) reference and an Illinois Unified Crime Reporting (IUCR) code.
+
+Installation
+============
+
+        pip install git+https://github.com/sc3/python-iucr.git
+
+Features
+========
+
+Look up an IUCR offense by ILCS reference
+-----------------------------------------
+
+        >>> import iucr
+        >>> offenses = iucr.lookup_by_ilcs("720-5/9-1")
+        >>> print(offenses[0].code)
+        0110
+        >>> print(offenses[0].offense_category)
+        Homicide
+        >>> print(offenses[0].index_offense)
+        True
 
 About the data
 ==============
