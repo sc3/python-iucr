@@ -26,6 +26,18 @@ Look up an IUCR offense by ILCS reference
         >>> print(offenses[0].index_offense)
         True
 
+You can also look up the IUCR offense based on the components (chapter, act prefix and section) of the ILCS code.
+
+
+        >>> import iucr
+        >>> offenses = iucr.lookup_by_ilcs("720", "5", "9-1")
+        >>> print(offenses[0].code)
+        0110
+        >>> print(offenses[0].offense_category)
+        Homicide
+        >>> print(offenses[0].index_offense)
+        True
+
 About the data
 ==============
 

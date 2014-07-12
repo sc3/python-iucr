@@ -75,7 +75,17 @@ def load_offenses(filename=None):
     return offenses, ilcs_to_iucr
 
 
-def lookup_by_ilcs(ilcs_reference):
+def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
+    if act_prefix is None:
+        # Only the first argument is specified,  That means it actually
+        # represents an ilcs_reference
+        ilcs_reference = chapter_or_reference
+    elif chapter_or_reference and act_prefix and section:
+        ilcs_reference = "{}-{}/{}".format(chapter_or_reference, act_prefix, section)
+    else:
+        raise TypeError("You must specify an ILCS reference or a chapter, "
+                "act prefix and section")
+
     return ilcs_to_iucr[ilcs_reference]
 
 
