@@ -1,10 +1,36 @@
+"""Metadata for Illinois Unified Crime Reporting (IUCR) offenses."""
 import csv
 import os.path
+
+__all__ = ['Offense', 'lookup_by_ilcs']
 
 offenses = []
 ilcs_to_iucr = {}
 
 class Offense(object):
+    """
+    A criminal offense that is part of the Illinois Uniform Crim Reporting
+    (IUCR).
+
+    Args:
+        code (str): 4-digit IUCR code.
+        offense (str): Human-readable description of the offense.
+        offense_category (str): Category of the offense.
+        index_offense (boolean): Whether the offense is an index offense.
+        csa_mvt_without_hierarchy (boolean): Whether the offense is a
+            Criminal Sexual Assault (CSA) or Motor Vehicle Theft (MVT)
+            without the hiearchy rule applied.
+
+    Attributes:
+        code (str): 4-digit IUCR code.
+        offense (str): Human-readable description of the offense.
+        offense_category (str): Category of the offense.
+        index_offense (boolean): Whether the offense is an index offense.
+        csa_mvt_without_hierarchy (boolean): Whether the offense is a
+            Criminal Sexual Assault (CSA) or Motor Vehicle Theft (MVT)
+            without the hiearchy rule applied.
+
+    """
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             self.__dict__[k] = v
@@ -38,6 +64,19 @@ class Offense(object):
 
 
 def load_offenses(filename=None):
+    """
+    Populate a list of offenses and the ILCS to IUCR crosswalk
+
+    Args:
+        filename (str): Filename of CSV file containing offenses.
+           Defaults to ``{package_dir}/data/ilcs2iucr.csv``.
+    
+    Returns:
+        Tuple where the first value is a list of Offense objects and
+        the second value is a dictionary mapping ILCS reference
+        strings to Offense objects.
+
+    """
     offenses = []
     offenses_seen = set()
     ilcs_to_iucr = {}
@@ -76,6 +115,27 @@ def load_offenses(filename=None):
 
 
 def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
+    """
+    Lookup an Illinois Unified Crime Reporting (IUCR) offense based on
+    a section of the Illinois Compiled Statutes (ILCS).
+
+    Args:
+        chapter_or_reference (str): Either a full reference to an ILCS
+           section, such as "720-5/7-1" or, if specifying the individual
+           components, the chapter number.
+        act_prefix (str): If specifying the individual components, the
+            ILCS section's act prefix number.
+        section (str): If specifying the individual component's the
+            ILCS section's section number within the chapter and act.
+
+    Returns:
+        Offense object matching the ILCS reference or section number
+        components.
+
+    Raises:
+        KeyError if an offense matching the ILCS section is not found.
+
+    """
     if act_prefix is None:
         # Only the first argument is specified,  That means it actually
         # represents an ilcs_reference
