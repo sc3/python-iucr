@@ -2,10 +2,11 @@
 import csv
 import os.path
 
-__all__ = ['Offense', 'lookup_by_ilcs']
+__all__ = ['Offense', 'lookup_by_ilcs', 'lookup_by_code']
 
 offenses = []
 ilcs_to_iucr = {}
+offenses_by_code = {}
 
 class Offense(object):
     """
@@ -72,14 +73,16 @@ def load_offenses(filename=None):
            Defaults to ``{package_dir}/data/ilcs2iucr.csv``.
     
     Returns:
-        Tuple where the first value is a list of Offense objects and
+        Tuple where the first value is a list of Offense objects, 
         the second value is a dictionary mapping ILCS reference
-        strings to Offense objects.
+        strings to Offense objects, and the third value is a
+        dictionary mapping IUCR code to Offense objects.
 
     """
     offenses = []
     offenses_seen = set()
     ilcs_to_iucr = {}
+    offenses_by_code = {}
 
     if filename is None:
         filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -111,7 +114,9 @@ def load_offenses(filename=None):
                 offenses.append(offense)
                 offenses_seen.add(offense)
 
-    return offenses, ilcs_to_iucr
+            offenses_by_code[offense.code] = offense
+
+    return offenses, ilcs_to_iucr, offenses_by_code
 
 
 def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
@@ -149,4 +154,21 @@ def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
     return ilcs_to_iucr[ilcs_reference]
 
 
-offenses, ilcs_to_iucr = load_offenses()
+def lookup_by_code(code):
+    """
+    Lookup an offense by its IUCR code.
+
+    Args:
+        code (str): 4-digit IUCR code.
+
+    Returns:
+        Offense object with specified IUCR code.
+
+    Raises:
+        KeyError if an offense matching the specified code is not found.
+
+    """
+    return offenses_by_code[code] 
+
+
+offenses, ilcs_to_iucr, offenses_by_code = load_offenses()

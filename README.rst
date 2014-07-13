@@ -38,6 +38,17 @@ You can also look up the IUCR offense based on the components (chapter, act pref
         >>> print(offenses[0].index_offense)
         True
 
+Look up an IUCR offense by IUCR code
+------------------------------------
+        >>> import iucr
+        >>> offense = iucr.lookup_by_code("0110")
+        >>> print(offense.code)
+        0110
+        >>> print(offense.offense_category)
+        Homicide
+        >>> print(offense.index_offense)
+        True
+
 About the data
 ==============
 

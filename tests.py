@@ -20,3 +20,8 @@ class LookupTestCase(TestCase):
         for chapter, act_prefix, section, iucr_code in test_values:
             iucr_obj = iucr.lookup_by_ilcs(chapter, act_prefix, section)[0]
             self.assertEqual(iucr_obj.code, iucr_code)
+
+    def test_lookup_by_code(self):
+        code = '0110'
+        iucr_obj = iucr.lookup_by_code(code)
+        self.assertEqual(iucr_obj.code, code)
