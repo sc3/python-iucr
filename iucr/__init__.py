@@ -119,7 +119,8 @@ def load_offenses(filename=None):
     return offenses, ilcs_to_iucr, offenses_by_code
 
 
-def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
+def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None,
+        *section_bits):
     """
     Lookup an Illinois Unified Crime Reporting (IUCR) offense based on
     a section of the Illinois Compiled Statutes (ILCS).
@@ -132,6 +133,7 @@ def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
             ILCS section's act prefix number.
         section (str): If specifying the individual component's the
             ILCS section's section number within the chapter and act.
+        section_bits: Unlimited number of subsection or paragraph identifiers.
 
     Returns:
         Offense object matching the ILCS reference or section number
