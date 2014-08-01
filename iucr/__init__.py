@@ -37,7 +37,7 @@ class Offense(object):
             self.__dict__[k] = v
 
     def __repr__(self):
-        return "<Offense:{}>".format(str(self))
+        return "<Offense: {}>".format(str(self))
 
     def __str__(self):
         return self.code
@@ -120,7 +120,7 @@ def load_offenses(filename=None):
 
 
 def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None,
-        *section_bits):
+        *subsection_bits):
     """
     Lookup an Illinois Unified Crime Reporting (IUCR) offense based on
     a section of the Illinois Compiled Statutes (ILCS).
@@ -149,6 +149,8 @@ def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None,
         ilcs_reference = chapter_or_reference
     elif chapter_or_reference and act_prefix and section:
         ilcs_reference = "{}-{}/{}".format(chapter_or_reference, act_prefix, section)
+        for bit in subsection_bits:
+            ilcs_reference += '({})'.format(bit)
     else:
         raise TypeError("You must specify an ILCS reference or a chapter, "
                 "act prefix and section")
