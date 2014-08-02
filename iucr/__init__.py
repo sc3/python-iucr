@@ -1,6 +1,7 @@
 """Metadata for Illinois Unified Crime Reporting (IUCR) offenses."""
 import csv
 import os.path
+import itertools
 
 __all__ = ['Offense', 'lookup_by_ilcs', 'lookup_by_code']
 
@@ -155,8 +156,14 @@ def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None,
         raise TypeError("You must specify an ILCS reference or a chapter, "
                 "act prefix and section")
 
-    return ilcs_to_iucr[ilcs_reference]
-
+    try:
+        return ilcs_to_iucr[ilcs_reference]
+    except KeyError:
+        # backoff by subsection, recursively; stop when subsection_bits is empty 
+        if any(subsection_bits):
+            return lookup_by_ilcs(chapter_or_reference, act_prefix, section, *subsection_bits[:-1])
+        else:
+            raise
 
 def lookup_by_code(code):
     """
