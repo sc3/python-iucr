@@ -37,7 +37,7 @@ class Offense(object):
             self.__dict__[k] = v
 
     def __repr__(self):
-        return "<Offense:{}>".format(str(self))
+        return "<Offense: {}>".format(str(self))
 
     def __str__(self):
         return self.code
@@ -119,7 +119,8 @@ def load_offenses(filename=None):
     return offenses, ilcs_to_iucr, offenses_by_code
 
 
-def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
+def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None,
+        *subsection_bits):
     """
     Lookup an Illinois Unified Crime Reporting (IUCR) offense based on
     a section of the Illinois Compiled Statutes (ILCS).
@@ -132,6 +133,7 @@ def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
             ILCS section's act prefix number.
         section (str): If specifying the individual component's the
             ILCS section's section number within the chapter and act.
+        section_bits: Unlimited number of subsection or paragraph identifiers.
 
     Returns:
         Offense object matching the ILCS reference or section number
@@ -147,12 +149,20 @@ def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None):
         ilcs_reference = chapter_or_reference
     elif chapter_or_reference and act_prefix and section:
         ilcs_reference = "{}-{}/{}".format(chapter_or_reference, act_prefix, section)
+        for bit in subsection_bits:
+            ilcs_reference += '({})'.format(bit)
     else:
         raise TypeError("You must specify an ILCS reference or a chapter, "
                 "act prefix and section")
 
-    return ilcs_to_iucr[ilcs_reference]
-
+    try:
+        return ilcs_to_iucr[ilcs_reference]
+    except KeyError:
+        # backoff by subsection, recursively; stop when subsection_bits is empty 
+        if any(subsection_bits):
+            return lookup_by_ilcs(chapter_or_reference, act_prefix, section, *subsection_bits[:-1])
+        else:
+            raise
 
 def lookup_by_code(code):
     """
