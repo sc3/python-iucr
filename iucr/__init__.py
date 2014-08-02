@@ -1,7 +1,6 @@
 """Metadata for Illinois Unified Crime Reporting (IUCR) offenses."""
 import csv
 import os.path
-import itertools
 
 __all__ = ['Offense', 'lookup_by_ilcs', 'lookup_by_code']
 
