@@ -6,6 +6,7 @@ class LookupTestCase(TestCase):
     def test_lookup_by_ilcs_reference(self):
         test_values = [
             ('720-5/9-1', '0110'),
+            ('720-5/12-30', '4387'),
         ]
 
         for ilcs_ref, iucr_code in test_values:
