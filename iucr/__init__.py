@@ -101,14 +101,14 @@ def load_offenses(filename=None):
                 csa_mvt_without_hierarchy=row['csa_mvt_without_hierarchy']
             )
 
-            for ilcs in [row['ilcs_reference'], row['ilcs_reference_2']]:
-                if ilcs:
-                    try:
-                        ilcs_offenses = ilcs_to_iucr[ilcs]
-                        if offense not in ilcs_offenses:
-                            ilcs_offenses.append(offense)
-                    except KeyError:
-                        ilcs_to_iucr[ilcs] = [offense,]
+            ilcs = row['ilcs_reference']
+            if ilcs:
+                try:
+                    ilcs_offenses = ilcs_to_iucr[ilcs]
+                    if offense not in ilcs_offenses:
+                        ilcs_offenses.append(offense)
+                except KeyError:
+                    ilcs_to_iucr[ilcs] = [offense,]
 
             if offense not in offenses_seen:
                 offenses.append(offense)
