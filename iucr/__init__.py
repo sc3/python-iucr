@@ -101,7 +101,7 @@ def load_offenses(filename=None):
                 csa_mvt_without_hierarchy=row['csa_mvt_without_hierarchy']
             )
 
-            ilcs = row['ilcs_reference']
+            ilcs = row['ilcs_reference'].lower()
             if ilcs:
                 try:
                     ilcs_offenses = ilcs_to_iucr[ilcs]
@@ -156,7 +156,7 @@ def lookup_by_ilcs(chapter_or_reference, act_prefix=None, section=None,
                 "act prefix and section")
 
     try:
-        return ilcs_to_iucr[ilcs_reference]
+        return ilcs_to_iucr[ilcs_reference.lower()]
     except KeyError:
         # backoff by subsection, recursively; stop when subsection_bits is empty 
         if any(subsection_bits):
